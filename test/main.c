@@ -1,0 +1,70 @@
+#include "ft_malloc.h"
+
+int main()
+{
+	char	*a;
+	char	*b;
+	char	*c;
+	char	*d;
+	char	*e;
+	char	*f;
+	char	*g;
+	char	*h;
+	char	*i;
+	char	*j;
+	char	*k;
+	char	*l;
+	char	*m;
+	char	*n;
+
+	a = ft_malloc(10);
+	puts("---");
+	show_alloc_mem();
+	puts("---");
+	a = ft_realloc(a, 7);
+	b = ft_malloc(10);
+	puts("---");
+	show_alloc_mem();
+	puts("---");
+	a = ft_realloc(a, 5);
+	c = ft_malloc(10);
+	d = ft_malloc(10);
+	e = ft_malloc(10);
+	f = ft_malloc(10);
+	g = ft_malloc(0);
+	h = ft_malloc(10);
+	i = ft_malloc(20);
+	j = ft_malloc(20);
+	k = ft_malloc(20);
+	l = ft_malloc(20);
+	m = ft_malloc(20);
+	n = ft_malloc(20);
+	puts("---");
+	show_alloc_mem();
+	puts("---");
+	ft_free(d);
+	ft_free(a);
+	ft_free(b);
+	ft_free(c);
+	puts("---");
+	show_alloc_mem();
+	puts("---");
+	ft_free(i);
+	ft_free(j);
+	ft_free(k);
+	ft_free(e);
+	b = ft_malloc(10);
+	puts("---");
+	show_alloc_mem();
+	puts("---");
+	ft_free(f);
+	ft_free(g);
+	ft_free(h);
+	ft_free(l);
+	ft_free(m);
+	ft_free(n);
+	puts("---");
+	show_alloc_mem();
+	puts("---");
+	return (0);
+}
