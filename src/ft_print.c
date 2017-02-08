@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "ft_malloc.h"
 
-static int	ft_putstr(char *s)
+int		ft_putstr(char *s)
 {
 	int		i;
 	char	*s_cpy;
@@ -24,11 +24,11 @@ static int	ft_putstr(char *s)
 	return (write(1, s, i));
 }
 
-static int	ft_putnbr(size_t number, int base)
+int		ft_putnbr(size_t number, int base)
 {
 	const char 			*alphabet = "0123456789ABCDEF";
-	size_t				tmp;
 	unsigned int		counter;
+	size_t				tmp;
 
 	tmp = base;
 	counter = 0;
@@ -44,40 +44,45 @@ static int	ft_putnbr(size_t number, int base)
 	return (counter);
 }
 
-int			ft_print_zone(char *name, void *address)
+void	ft_print_memory(void *mem, size_t size)
 {
+	char	*mem_cpy;
+	char	tab[64];
 	int		i;
 
-	i = 0;
-	i += ft_putstr(name);
-	i += ft_putstr(" : 0x");
-	i += ft_putnbr((size_t)address, 16);
-	i += ft_putstr("\n");
-	return (i);
+	i = -1;
+	mem_cpy = mem;
+	while (++i < size)
+	{
+		if (!(i % 64))
+		{
+			if (i)
+				write(1, tab, 64);
+			ft_putstr("\n");
+			ft_memcpy(tab, &mem_cpy[i], 64);
+		}
+		ft_putnbr(mem_cpy[i]);
+		ft_putstr(" ");
+		if (!(0x20 <= mem_cpy[i] && mem_cpy[i] <= 0x7E))
+			tab[i % 64] = '.';
+	}
+	write(1,"                                                                ",\
+			64 - i);
+	write(1, tab, i % 64);
+	putstr("\n");
+	return (0);
 }
 
-int			ft_print_block(void *addr_begin, void *addr_end, unsigned int size)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	int		i;
+	size_t			i;
+	unsigned char	*src_cpy;
+	unsigned char	*dest_cpy;
 
-	i = 0;
-	i += ft_putstr("0x");
-	i += ft_putnbr((size_t)addr_begin, 16);
-	i += ft_putstr(" - 0x");
-	i += ft_putnbr((size_t)addr_end, 16);
-	i += ft_putstr(" : ");
-	i += ft_putnbr(size, 10);
-	i += ft_putstr(" octets\n");
-	return (i);
-}
-
-int			ft_print_total(int size)
-{
-	int		i;
-
-	i = 0;
-	i += ft_putstr("total :");
-	i += ft_putnbr(size, 10);
-	i += ft_putstr("\n");
-	return (i);
+	i = -1;
+	src_cpy = (unsigned char*)src;
+	dest_cpy = (unsigned char*)dest;
+	while (++i < n)
+		dest_cpy[i] = src_cpy[i];
+	return (dest_cpy);
 }

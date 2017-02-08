@@ -12,33 +12,6 @@
 
 #include "ft_malloc.h"
 
-static t_stdmem		*ft_find(t_block *ptr, t_stdmem *mtmp, t_stdmem **prev)
-{
-	t_block		*btmp;
-
-	if (prev)
-		*prev = NULL;
-	while (mtmp)
-	{
-		if ((void *)mtmp->mem <= (void *)ptr &&
-				(void *)ptr <= (void *)mtmp->mem + mtmp->size)
-		{
-			btmp = mtmp->mem;
-			while (btmp)
-			{
-				if (btmp == ptr)
-					return (mtmp);
-				btmp = btmp->next;
-			}
-			return (NULL);
-		}
-		if (prev)
-			*prev = mtmp;
-		mtmp = mtmp->next;
-	}
-	return (NULL);
-}
-
 static int			ft_free_ext(t_block *ptr)
 {
 	t_block		*tmp;
@@ -65,7 +38,34 @@ static int			ft_free_ext(t_block *ptr)
 	return (done);
 }
 
-static t_stdmem		*ft_merge(t_block *ptr, t_stdmem **prev)
+t_stdmem		*ft_find(t_block *ptr, t_stdmem *mtmp, t_stdmem **prev)
+{
+	t_block		*btmp;
+
+	if (prev)
+		*prev = NULL;
+	while (mtmp)
+	{
+		if ((void *)mtmp->mem <= (void *)ptr &&
+				(void *)ptr <= (void *)mtmp->mem + mtmp->size)
+		{
+			btmp = mtmp->mem;
+			while (btmp)
+			{
+				if (btmp == ptr)
+					return (mtmp);
+				btmp = btmp->next;
+			}
+			return (NULL);
+		}
+		if (prev)
+			*prev = mtmp;
+		mtmp = mtmp->next;
+	}
+	return (NULL);
+}
+
+t_stdmem		*ft_merge(t_block *ptr, t_stdmem **prev)
 {
 	t_stdmem	*mtmp;
 
@@ -97,59 +97,16 @@ void				ft_free(void *ptr)
 	t_stdmem	*prev;
 	t_block		*tmp;
 
+	if (!ptr)
+		return ;
 	tmp = ptr - sizeof(t_block);
 	if (ft_free_ext(tmp))
 		return ;
-	mtmp = ft_merge(tmp, &prev);
+	if (!(mtmp = ft_merge(tmp, &prev)))
+		return ;
 	if (prev && !((t_block *)mtmp->mem)->next)
 	{
 		prev->next = mtmp->next;
 		munmap(mtmp, mtmp->size + sizeof(mtmp));
 	}
-}
-
-void				ft_extendblock(t_block *tmp, size_t size)
-{
-	t_block		*new;
-
-	new = (void *)tmp->ptr + size;
-	new->size = tmp->size + tmp->next->size - size;
-	tmp->used = 1;
-	tmp->size = size;
-	tmp->next->prev = new;
-	if (tmp->next->next)
-		tmp->next->next->prev = new;
-	new->next = tmp->next->next;
-	tmp->next = new;
-	new->prev = tmp;
-	new->used = 0;
-	new->ptr = (void *)new + sizeof(t_block);
-}
-
-void				*ft_realloc(void *ptr, size_t size)
-{
-	t_block		*tmp;
-	t_block		*new;
-
-	tmp = ptr - sizeof(t_block);
-	if (!(ft_find(tmp, g_mem.min, NULL) || ft_find(tmp, g_mem.med, NULL)))
-		return (ft_malloc(size));
-	if (tmp->size > size + sizeof(t_block))
-	{
-		new = ft_block(tmp, size);
-		ft_merge(tmp->next, NULL);
-	}
-	else if (tmp->size < size && tmp->next && !tmp->next->used &&
-			tmp->next->size + tmp->size > size)
-	{
-		ft_extendblock(tmp, size);
-		return (tmp->ptr);
-	}
-	else
-	{
-		new = ft_malloc(size);
-		ft_memcpy(new, tmp->ptr, size);
-		ft_free(ptr);
-	}
-	return (new);
 }

@@ -26,9 +26,10 @@
 # define MALLOCMAP	MAP_ANONYMOUS | MAP_PRIVATE
 
 /*
-** # define ft_free free
-** # define ft_malloc malloc
-** # define ft_realloc realloc
+** # define ft_safe_free free
+** # define ft_safe_malloc malloc
+** # define ft_safe_realloc realloc
+** # define ft_safe_calloc calloc
 */
 
 typedef struct				s_stdmem
@@ -56,15 +57,43 @@ typedef struct				s_mem
 }							t_mem;
 
 extern t_mem				g_mem;
+extern pthread_mutex_t		g_fastmutex;
 
+/*
+** Unsafe functions
+*/
 void						*ft_malloc(size_t size);
 void						ft_free(void *ptr);
-t_block						*ft_block(t_block *prev, size_t size);
-void						*ft_memcpy(void *dest, const void *src, size_t n);
 void						*ft_realloc(void *ptr, size_t size);
+
+/*
+** Show allocations
+*/
 void						show_alloc_mem();
-int							ft_print_block(void *addr_begin, void *addr_end,\
-														unsigned int size);
-int							ft_print_zone(char *name, void *address);
-int							ft_print_total(int size);
+void						show_alloc_mem_hex(void);
+void						show_alloc(bool show_mem);
+
+/*
+** Memory tools
+*/
+t_block						*ft_block(t_block *prev, size_t size);
+t_stdmem					*ft_merge(t_block *ptr, t_stdmem **prev);
+t_stdmem					*ft_find(t_block *ptr, t_stdmem *mtmp,\
+															t_stdmem **prev);
+/*
+** Standard functions
+*/
+void						*ft_memcpy(void *dest, const void *src, size_t n);
+void						ft_print_memory(void *mem, size_t size);
+int							ft_putnbr(size_t number, int base);
+int							ft_putstr(char *s);
+
+/*
+**	Final functions
+*/
+void						*ft_safe_malloc(size_t size);
+void						ft_safe_free(void *ptr);
+void						*ft_safe_realloc(void *ptr, size_t size);
+void						*ft_safe_calloc(size_t nmemb, size_t size);
+
 #endif
