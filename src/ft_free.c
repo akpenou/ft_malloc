@@ -6,7 +6,7 @@
 /*   By: akpenou <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/18 16:52:30 by akpenou           #+#    #+#             */
-/*   Updated: 2017/02/05 16:23:41 by akpenou          ###   ########.fr       */
+/*   Updated: 2017/03/20 18:13:49 by akpenou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,24 +106,6 @@ void				ft_free(void *ptr)
 		prev->next = mtmp->next;
 		munmap(mtmp, mtmp->size + sizeof(mtmp));
 	}
-}
-
-void				ft_extendblock(t_block *tmp, size_t size)
-{
-	t_block		*new;
-
-	new = (void *)tmp->ptr + size;
-	new->size = tmp->size + tmp->next->size - size;
-	tmp->used = 1;
-	tmp->size = size;
-	tmp->next->prev = new;
-	if (tmp->next->next)
-		tmp->next->next->prev = new;
-	new->next = tmp->next->next;
-	tmp->next = new;
-	new->prev = tmp;
-	new->used = 0;
-	new->ptr = (void *)new + sizeof(t_block);
 }
 
 void				*ft_realloc(void *ptr, size_t size)

@@ -6,7 +6,7 @@
 /*   By: akpenou <akpenou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/05 11:30:56 by akpenou           #+#    #+#             */
-/*   Updated: 2017/02/05 12:57:46 by akpenou          ###   ########.fr       */
+/*   Updated: 2017/03/20 18:46:16 by akpenou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ static int	ft_putstr(char *s)
 
 static int	ft_putnbr(size_t number, int base)
 {
-	const char 			*alphabet = "0123456789ABCDEF";
+	const char			*alphabet = "0123456789ABCDEF";
 	size_t				tmp;
 	unsigned int		counter;
 
 	tmp = base;
 	counter = 0;
-	while (number / tmp >= base)
+	while (number / tmp >= (size_t)base)
 		tmp *= base;
 	while (tmp)
 	{

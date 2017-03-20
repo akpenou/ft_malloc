@@ -6,7 +6,7 @@
 /*   By: akpenou <akpenou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/05 17:19:02 by akpenou           #+#    #+#             */
-/*   Updated: 2017/02/05 17:19:04 by akpenou          ###   ########.fr       */
+/*   Updated: 2017/03/20 18:41:25 by akpenou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@
 # define MALLOCPROT	PROT_READ | PROT_WRITE
 # define MALLOCMAP	MAP_ANONYMOUS | MAP_PRIVATE
 
-/*
-** # define ft_free free
-** # define ft_malloc malloc
-** # define ft_realloc realloc
-*/
+
+# define ft_free free
+# define ft_malloc malloc
+# define ft_realloc realloc
+
 
 typedef struct				s_stdmem
 {
@@ -66,5 +66,7 @@ void						show_alloc_mem();
 int							ft_print_block(void *addr_begin, void *addr_end,\
 														unsigned int size);
 int							ft_print_zone(char *name, void *address);
+void						ft_extendblock(t_block *tmp, size_t size);
 int							ft_print_total(int size);
+
 #endif

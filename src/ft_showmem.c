@@ -6,7 +6,7 @@
 /*   By: akpenou <akpenou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 18:01:57 by akpenou           #+#    #+#             */
-/*   Updated: 2017/02/05 16:21:50 by akpenou          ###   ########.fr       */
+/*   Updated: 2017/03/20 18:43:36 by akpenou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static int	run_mem_block(t_block *mem)
 	int		size;
 
 	block = mem;
+	size = 0;
 	while (block)
 	{
 		if (block->used)

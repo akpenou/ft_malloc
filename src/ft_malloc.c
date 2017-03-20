@@ -6,7 +6,7 @@
 /*   By: akpenou <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/18 16:52:27 by akpenou           #+#    #+#             */
-/*   Updated: 2017/02/05 16:23:43 by akpenou          ###   ########.fr       */
+/*   Updated: 2017/03/20 18:45:01 by akpenou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ static t_block		*ft_find(size_t size)
 void				*ft_malloc(size_t size)
 {
 	t_block		*ptr;
-	t_block		*tmp;
 	int			s;
 
 	if (!g_mem.init)
