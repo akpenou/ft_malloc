@@ -6,13 +6,25 @@
 /*   By: akpenou <akpenou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/05 11:30:56 by akpenou           #+#    #+#             */
-/*   Updated: 2017/03/20 18:46:16 by akpenou          ###   ########.fr       */
+/*   Updated: 2017/03/21 16:11:42 by akpenou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "ft_malloc.h"
 
-static int	ft_putstr(char *s)
+int		ft_repeat_char(char c, unsigned int n)
+{
+	unsigned int	i;
+
+	i = -1;
+	if ((int)n < 0)
+		return (0);
+	while (++i < n)
+		write(1, &c, 1);
+	return ((int)n);
+}
+
+int		ft_putstr(char *s)
 {
 	int		i;
 	char	*s_cpy;
@@ -24,11 +36,11 @@ static int	ft_putstr(char *s)
 	return (write(1, s, i));
 }
 
-static int	ft_putnbr(size_t number, int base)
+int		ft_putnbr(size_t number, int base)
 {
 	const char			*alphabet = "0123456789ABCDEF";
-	size_t				tmp;
 	unsigned int		counter;
+	size_t				tmp;
 
 	tmp = base;
 	counter = 0;
@@ -44,40 +56,43 @@ static int	ft_putnbr(size_t number, int base)
 	return (counter);
 }
 
-int			ft_print_zone(char *name, void *address)
+void	ft_print_memory(void *mem, size_t size)
 {
-	int		i;
+	char	*mem_cpy;
+	char	tab[64];
+	size_t	i;
 
-	i = 0;
-	i += ft_putstr(name);
-	i += ft_putstr(" : 0x");
-	i += ft_putnbr((size_t)address, 16);
-	i += ft_putstr("\n");
-	return (i);
+	i = -1;
+	mem_cpy = mem;
+	while (++i < size)
+	{
+		if (!(i % 64))
+		{
+			if (i)
+				write(1, tab, 64);
+			ft_putstr("\n");
+			ft_memcpy(tab, &mem_cpy[i], 64);
+		}
+		ft_putnbr(mem_cpy[i], 10);
+		ft_putstr(" ");
+		if (!(0x20 <= mem_cpy[i] && mem_cpy[i] <= 0x7E))
+			tab[i % 64] = '.';
+	}
+	ft_repeat_char(' ', 64 - i);
+	write(1, tab, i % 64);
+	ft_putstr("\n");
 }
 
-int			ft_print_block(void *addr_begin, void *addr_end, unsigned int size)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	int		i;
+	size_t			i;
+	unsigned char	*src_cpy;
+	unsigned char	*dest_cpy;
 
-	i = 0;
-	i += ft_putstr("0x");
-	i += ft_putnbr((size_t)addr_begin, 16);
-	i += ft_putstr(" - 0x");
-	i += ft_putnbr((size_t)addr_end, 16);
-	i += ft_putstr(" : ");
-	i += ft_putnbr(size, 10);
-	i += ft_putstr(" octets\n");
-	return (i);
-}
-
-int			ft_print_total(int size)
-{
-	int		i;
-
-	i = 0;
-	i += ft_putstr("total :");
-	i += ft_putnbr(size, 10);
-	i += ft_putstr("\n");
-	return (i);
+	i = -1;
+	src_cpy = (unsigned char*)src;
+	dest_cpy = (unsigned char*)dest;
+	while (++i < n)
+		dest_cpy[i] = src_cpy[i];
+	return (dest_cpy);
 }

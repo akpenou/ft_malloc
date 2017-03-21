@@ -6,7 +6,7 @@
 /*   By: akpenou <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/18 16:52:27 by akpenou           #+#    #+#             */
-/*   Updated: 2017/03/20 18:45:01 by akpenou          ###   ########.fr       */
+/*   Updated: 2017/03/21 16:24:03 by akpenou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_block				*ft_block(t_block *prev, size_t size)
 
 	if ((prev->size) <= size + sizeof(t_block))
 		return (prev);
-	tmp = (void *)prev->ptr + size;
+	tmp = (void *)((char *)prev->ptr + size);
 	tmp->size = prev->size - (size + sizeof(t_block));
 	tmp->ptr = (void *)tmp + sizeof(t_block);
 	prev->size = prev->size - (tmp->size + sizeof(t_block));
@@ -78,7 +78,7 @@ static t_stdmem		*ft_stdmem(t_stdmem *prev, size_t size)
 	return (ptr);
 }
 
-static t_block		*ft_find(size_t size)
+static t_block		*ft_find_(size_t size)
 {
 	t_block		*mem;
 	t_stdmem	*stdmem;
@@ -110,13 +110,13 @@ void				*ft_malloc(size_t size)
 
 	if (!g_mem.init)
 	{
-		s = getpagesize() * 2;
+		s = getpagesize() * 13;
 		g_mem.min = ft_stdmem(NULL, s);
-		s = 3 * s;
+		s = 128 * s;
 		g_mem.med = ft_stdmem(NULL, s);
 		g_mem.init = 1;
 	}
-	ptr = ft_find(size);
+	ptr = ft_find_(size);
 	ptr->used = 1;
 	return (ptr->ptr);
 }
